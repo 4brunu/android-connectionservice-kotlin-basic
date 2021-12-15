@@ -25,13 +25,13 @@ class CallManager(context: Context) {
         telephonyManager = context.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
 
         this.context = context
-        val componentName = ComponentName(this.context, ConnService::class.java)
+        val componentName = ComponentName(this.context, CallConnectionService::class.java)
         phoneAccountHandle = PhoneAccountHandle(componentName,"com.darkhorse.videocalltest")
 
     }
 
     fun register(){
-        val componentName = ComponentName(this.context, ConnService::class.java)
+        val componentName = ComponentName(this.context, CallConnectionService::class.java)
         phoneAccountHandle = PhoneAccountHandle(componentName,"com.darkhorse.videocalltest")
 
         val phoneAccount = PhoneAccount.builder(phoneAccountHandle,"com.darkhorse.videocalltest").setCapabilities(PhoneAccount.CAPABILITY_CONNECTION_MANAGER).setCapabilities(PhoneAccount.CAPABILITY_CALL_PROVIDER).build()
@@ -44,35 +44,35 @@ class CallManager(context: Context) {
         }
     }
 
-    fun incomingCall(caller: String?){
-        val callInfo = Bundle()
-        callInfo.putString("from", caller)
-        val componentName = ComponentName(this.context, ConnService::class.java)
-        phoneAccountHandle = PhoneAccountHandle(componentName,"com.darkhorse.videocalltest")
-        if(checkAccountConnection(this.context))
-        telecomManager.addNewIncomingCall(phoneAccountHandle,callInfo)
-        else
-        Log.i("incomingCall", "no permission")
-    }
+//    fun incomingCall(caller: String?){
+//        val callInfo = Bundle()
+//        callInfo.putString("from", caller)
+//        val componentName = ComponentName(this.context, CallConnectionService::class.java)
+//        phoneAccountHandle = PhoneAccountHandle(componentName,"com.darkhorse.videocalltest")
+//        if(checkAccountConnection(this.context))
+//        telecomManager.addNewIncomingCall(phoneAccountHandle,callInfo)
+//        else
+//        Log.i("incomingCall", "no permission")
+//    }
 
-    private fun checkAccountConnection(context: Context): Boolean {
-        var isConnected = false
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (ContextCompat.checkSelfPermission(
-                    context,
-                    Manifest.permission.READ_PHONE_STATE
-                ) == PackageManager.PERMISSION_GRANTED
-            ) {
-                val enabledAccounts: List<PhoneAccountHandle> =
-                    telecomManager.getCallCapablePhoneAccounts()
-                for (account in enabledAccounts) {
-                    if (account.componentName.className == ConnService::class.java.getCanonicalName()) {
-                        isConnected = true
-                        break
-                    }
-                }
-            }
-        }
-        return isConnected
-    }
+//    private fun checkAccountConnection(context: Context): Boolean {
+//        var isConnected = false
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (ContextCompat.checkSelfPermission(
+//                    context,
+//                    Manifest.permission.READ_PHONE_STATE
+//                ) == PackageManager.PERMISSION_GRANTED
+//            ) {
+//                val enabledAccounts: List<PhoneAccountHandle> =
+//                    telecomManager.getCallCapablePhoneAccounts()
+//                for (account in enabledAccounts) {
+//                    if (account.componentName.className == CallConnectionService::class.java.getCanonicalName()) {
+//                        isConnected = true
+//                        break
+//                    }
+//                }
+//            }
+//        }
+//        return isConnected
+//    }
 }
